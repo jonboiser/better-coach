@@ -4,7 +4,7 @@
     <h1>Hey {{ $router.currentRoute.params.username }}!!!</h1>
     <h1>The Quiz</h1>
     <div class="exercise">
-      <p>{{ exerciseQuestion }}</p>
+      <h3>{{ exerciseQuestion }}</h3>
       <div class="responses">
         <template v-for="i in range">
           <input
@@ -24,21 +24,21 @@
           <br :key="`br${i}`">
         </template>
       </div>
-    </div>
-    <div class="buttons">
-      <button
-        v-if="!submitted"
-        type="submit"
-        @click="submitted=true"
-      >
-        Submit
-      </button>
-      <button
-        v-if="submitted"
-        @click="submitted=false"
-      >
-        Next
-      </button>
+      <div class="buttons">
+        <button
+          v-if="!submitted"
+          type="submit"
+          @click="submitted=true"
+        >
+          Submit
+        </button>
+        <button
+          v-if="submitted"
+          @click="submitted=false"
+        >
+          Next
+        </button>
+      </div>
     </div>
   </div>
 
@@ -68,4 +68,8 @@ export default {
 
 <style scoped>
 
+.exercise {
+  background-color: pink;
+  padding: 1rem;
+}
 </style>
