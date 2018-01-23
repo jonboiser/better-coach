@@ -4,9 +4,9 @@
     <h1>Hey {{ $router.currentRoute.params.username }}!!!</h1>
     <h1>The Quiz</h1>
     <div class="exercise">
-      <h3>{{ exerciseQuestion }}</h3>
+      <h3>{{ questions[0].question }}</h3>
       <div class="responses">
-        <template v-for="i in range">
+        <template v-for="i in questions[0].options">
           <input
             v-model="selectedResponse"
             type="radio"
@@ -46,6 +46,8 @@
 
 
 <script>
+import questions from '../assets/questions';
+
 export default {
   name: 'Quiz',
   data() {
@@ -55,6 +57,14 @@ export default {
       range: [1, 2, 3, 4],
       submitted: false,
     };
+  },
+  computed: {
+    questions() {
+      return questions.map(q => ({
+        question: q.question,
+        options: q.options,
+      }));
+    },
   },
   methods: {
     submitAnswer(response) {
