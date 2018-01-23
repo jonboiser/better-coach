@@ -1,6 +1,7 @@
 <template>
 
   <div>
+    <h1>Hey {{ $router.currentRoute.params.username }}!!!</h1>
     <h1>The Quiz</h1>
     <div class="exercise">
       <p>{{ exerciseQuestion }}</p>
