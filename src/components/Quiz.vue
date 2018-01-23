@@ -1,12 +1,12 @@
 <template>
 
   <div>
-    <h1>Hey {{ $router.currentRoute.params.username }}!!!</h1>
+    <h1>Hey {{ username }}!!!</h1>
     <h1>The Quiz</h1>
     <div class="exercise">
-      <h3>{{ questions[0].question }}</h3>
+      <h3>{{ currentQuestion.question }}</h3>
       <div class="responses">
-        <template v-for="i in questions[0].options">
+        <template v-for="(option, i) in currentQuestion.options">
           <input
             v-model="selectedResponse"
             type="radio"
@@ -19,7 +19,7 @@
           <label
             :for="`response${i}`"
             :key="`label${i}`"
-          >Answer {{ i }}
+          >{{ option }}
           </label>
           <br :key="`br${i}`">
         </template>
@@ -34,7 +34,7 @@
         </button>
         <button
           v-if="submitted"
-          @click="submitted=false"
+          @click="goToNextQuestion"
         >
           Next
         </button>
@@ -52,10 +52,9 @@ export default {
   name: 'Quiz',
   data() {
     return {
-      exerciseQuestion: 'What is 1 + 1?',
       selectedResponse: '1',
-      range: [1, 2, 3, 4],
       submitted: false,
+      questionIndex: 0,
     };
   },
   computed: {
@@ -65,11 +64,22 @@ export default {
         options: q.options,
       }));
     },
+    currentQuestion() {
+      return this.questions[this.questionIndex];
+    },
+    username() {
+      return this.$router.currentRoute.params.username;
+    },
   },
   methods: {
     submitAnswer(response) {
       // send current question, plus whether response was correct
       console.log(response);
+    },
+    goToNextQuestion() {
+      this.selectedResponse = '0';
+      this.submitted = false;
+      this.questionIndex = this.questionIndex + 1;
     },
   },
 };
