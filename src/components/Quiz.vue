@@ -3,7 +3,7 @@
   <div>
     <h1>Hey {{ username }}!!!</h1>
     <h1>The Quiz</h1>
-    <div class="exercise">
+    <div v-if="currentQuestion" class="exercise">
       <h3>{{ currentQuestion.question }}</h3>
       <div class="responses">
         <template v-for="(option, i) in currentQuestion.options">
@@ -14,7 +14,7 @@
             :value="i"
             :id="`response${i}`"
             :key="i"
-            :disabled="submitted"
+            :disabled="responseIsCorrect"
           />
           <label
             :for="`response${i}`"
@@ -26,19 +26,30 @@
       </div>
       <div class="buttons">
         <button
-          v-if="!submitted"
+          v-if="!responseIsCorrect"
           type="submit"
-          @click="submitted=true"
+          @click="submitAnswer"
         >
           Submit
         </button>
         <button
-          v-if="submitted"
+          v-if="responseIsCorrect"
           @click="goToNextQuestion"
         >
           Next
         </button>
       </div>
+      <div v-if="numAttempts > 0" class="feedback">
+        <span v-if="responseIsCorrect">
+          Nice!!!
+        </span>
+        <span v-else>
+          Wrong answer! Try again!
+        </span>
+      </div>
+    </div>
+    <div v-else>
+      You're done!
     </div>
   </div>
 
@@ -52,9 +63,11 @@ export default {
   name: 'Quiz',
   data() {
     return {
-      selectedResponse: '1',
+      selectedResponse: 0,
       submitted: false,
       questionIndex: 0,
+      numAttempts: 0,
+      responseIsCorrect: false,
     };
   },
   computed: {
@@ -65,20 +78,26 @@ export default {
       }));
     },
     currentQuestion() {
-      return this.questions[this.questionIndex];
+      return questions[this.questionIndex];
     },
     username() {
       return this.$router.currentRoute.params.username;
     },
   },
   methods: {
-    submitAnswer(response) {
-      // send current question, plus whether response was correct
-      console.log(response);
+    selectedResponseIsCorrect() {
+      return Number(this.selectedResponse) === this.currentQuestion.answer;
+    },
+    submitAnswer() {
+      this.numAttempts = this.numAttempts + 1;
+      if (this.selectedResponseIsCorrect()) {
+        this.responseIsCorrect = true;
+      }
     },
     goToNextQuestion() {
-      this.selectedResponse = '0';
-      this.submitted = false;
+      this.selectedResponse = 0;
+      this.numAttempts = 0;
+      this.responseIsCorrect = false;
       this.questionIndex = this.questionIndex + 1;
     },
   },
