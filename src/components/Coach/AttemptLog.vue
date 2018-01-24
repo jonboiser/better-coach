@@ -1,18 +1,21 @@
 <template>
 
-  <div
-    class="fade"
-    :class="{ highlight: highlight, lastAttempt: lastAttempt }"
-  >
-    <div>
-      {{ title }}
-    </div>
-    <div class="attempts">
-      <Attempt
-        v-for="(attempt, index) in attempts"
-        :key="index"
-        :value="attempt"
-      />
+  <div>
+    <!-- inner wrapper is necessary for list transistions -->
+    <div
+      class="fade"
+      :class="{ highlight: highlight, lastAttempt: lastAttempt }"
+    >
+      <div>
+        {{ title }}
+      </div>
+      <div class="attempts">
+        <Attempt
+          v-for="(attempt, index) in attempts"
+          :key="index"
+          :value="attempt"
+        />
+      </div>
     </div>
   </div>
 

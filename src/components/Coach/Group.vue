@@ -5,12 +5,14 @@
       {{ title }}
     </div>
     <div v-if="contents.length" class="pure-u-1-2">
-      <AttemptLog
-        v-for="content in contents"
-        :key="content.id"
-        :title="content.title"
-        :attempts="content.attempts"
-      />
+      <transition-group name="log">
+        <AttemptLog
+          v-for="content in contents"
+          :key="content.id"
+          :title="content.title"
+          :attempts="content.attempts"
+        />
+      </transition-group>
     </div>
     <div v-else class="pure-u-1-2 none">
       no responses
@@ -60,6 +62,18 @@ export default {
 
   .none {
     color: gray;
+  }
+
+  .log-enter-active, .log-leave-active {
+    transition: opacity 0.25s;
+  }
+
+  .log-enter, .log-leave-to {
+    opacity: 0;
+  }
+
+  .log-move {
+    transition: transform 0.4s;
   }
 
 </style>
