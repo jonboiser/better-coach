@@ -6,8 +6,42 @@
     <div class="title" id="classname">First grade</div>
     <label class="label" for="lessonname">Lesson</label>
     <div class="title" id="lessonname">Phonics</div>
-    <div>
-      stuff
+    <form class="pure-form">
+      <div>
+        Group by
+        <label for="learner">
+          <input
+            v-model="groupBy"
+            id="learner"
+            type="radio"
+            name="groupBy"
+            value="learner"
+          >
+          Learner
+        </label>
+        <label for="resource">
+          <input
+            v-model="groupBy"
+            id="resource"
+            type="radio"
+            name="groupBy"
+            value="resource"
+          >
+          Resource
+        </label>
+      </div>
+      <label class="pure-checkbox">
+        <input type="checkbox">
+        Sort by performance
+      </label>
+    </form>
+    <div class="pure-g table">
+      <div class="pure-u-1-2 table-header">
+        {{ primaryLabel }}
+      </div>
+      <div class="pure-u-1-2 table-header">
+        {{ secondaryLabel }}
+      </div>
     </div>
   </div>
 
@@ -31,6 +65,7 @@ export default {
   data() {
     return {
       data: sampleDB,
+      groupBy: 'learner',
     };
   },
   mounted() {
@@ -39,6 +74,15 @@ export default {
     // this.socket.on('update', msg => console.log(msg));
   },
   computed: {
+    groupByLearner() {
+      return this.groupBy === 'learner';
+    },
+    primaryLabel() {
+      return this.groupByLearner ? 'Learner' : 'Resource';
+    },
+    secondaryLabel() {
+      return this.groupByLearner ? 'Resource' : 'Learner';
+    },
   },
   methods: {
   },
@@ -48,10 +92,23 @@ export default {
 
 <style scoped>
 
+  label {
+    user-select: none;
+  }
+
   .title {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 16px;
+  }
+
+  .table {
+    margin-top: 24px;
+  }
+
+  .table-header {
+    font-weight: bold;
+    font-size: 18px;
   }
 
 </style>
