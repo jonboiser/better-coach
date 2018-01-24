@@ -43,10 +43,14 @@
         {{ secondaryLabel }}
       </div>
     </div>
-    <pre>
-      <!-- {{ JSON.stringify(report, null, 2) }} -->
-      <!-- {{ groups }} -->
-    </pre>
+    <!-- Delete this box -->
+    <div style="border: 1px solid blue">
+      <p>name:<input type="text" v-model="test_name"></p>
+      <p>QID<input type="number" v-model="test_qid"></p>
+      <p>value<input type="checkbox" v-model="test_val"></p>
+      <p><button @click="test_update">update</button></p>
+    </div>
+    <!-- / Delete this box -->
     <Group
       v-for="group in groups"
       :key="group.id"
@@ -59,13 +63,6 @@
 
 
 <script>
-
-// const sampleMsg =  {
-//   username: 'jb',
-//   questionID: 2,
-//   attempts: [true, false, false],
-// }
-
 
 import axios from 'axios';
 import io from 'socket.io-client';
@@ -116,6 +113,11 @@ export default {
       groupBy: 'learner',
       perfSort: false,
       report: [],
+      // delete this state
+      test_name: 'no one',
+      test_qid: 0,
+      test_val: 0,
+      // / delete this state
     };
   },
   components: {
@@ -156,6 +158,17 @@ export default {
     },
   },
   methods: {
+    // delete this function
+    test_update() {
+      console.log('test_update', this.test_name, this.test_qid);
+      const sampleMsg = {
+        username: this.test_name,
+        questionID: parseInt(this.test_qid, 10),
+        lastAttempt: Boolean(this.test_val),
+      };
+      this.updateReport(sampleMsg);
+    },
+    // / delete this function
     updateReport(update) {
       const userMatch = this.report.find(x => x.username === update.username);
       if (!userMatch) {
