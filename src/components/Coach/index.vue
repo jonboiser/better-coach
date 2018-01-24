@@ -100,14 +100,26 @@ function questionIdToContentList(id, report) {
 /**
  * contents :: { attempts: boolean[] }
  */
-function perfSort(contents) {
+function perfSortContents(contents) {
   const okWeight = 3;
   const wrongWeight = -1;
   const sorted = L.sortBy(contents, (c) => {
     const [right, wrong] = L.partition(c.attempts);
-    return (right.length * okWeight) - (wrong.length * wrongWeight);
+    return (right.length * okWeight) + (wrong.length * wrongWeight);
   });
   return sorted.reverse();
+}
+
+function perfSortGroups(groups) {
+  const okWeight = 3;
+  const wrongWeight = -1;
+  const [hasAttempts, noAttempts] = L.partition(groups, g => g.contents.length > 0);
+  const sortedWithAttempts = L.sortBy(hasAttempts, (g, idx) => {
+    const allAttempts = L.flatMap(g.contents, x => x.attempts || []);
+    const [right, wrong] = L.partition(allAttempts);
+    const score = (right.length * okWeight) + (wrong.length * wrongWeight);
+  }).reverse();
+  return [...sortedWithAttempts, ...noAttempts];
 }
 
 export default {
@@ -165,9 +177,12 @@ export default {
     sortByPerformance(groups) {
       const groupz = groups.map(g => ({
         ...g,
-        contents: perfSort(g.contents),
+        contents: perfSortContents(g.contents),
       }));
-      return groupz;
+      if (this.groupBy === 'learner') {
+        return groupz;
+      }
+      return perfSortGroups(groupz);
     },
     test_update(name, qid, val) {
       this.updateReport({
