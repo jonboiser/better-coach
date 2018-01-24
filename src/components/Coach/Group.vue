@@ -64,14 +64,6 @@ export default {
     color: gray;
   }
 
-  .log-enter-active, .log-leave-active {
-    transition: opacity 0.25s;
-  }
-
-  .log-enter, .log-leave-to {
-    opacity: 0;
-  }
-
   .log-move {
     transition: transform 0.4s;
   }

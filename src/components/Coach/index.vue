@@ -224,14 +224,6 @@ export default {
     font-size: 16px;
   }
 
-  .group-enter-active, .group-leave-active {
-    transition: opacity 0.25s;
-  }
-
-  .group-enter, .group-leave-to {
-    opacity: 0;
-  }
-
   .group-move {
     transition: transform 0.4s;
   }
