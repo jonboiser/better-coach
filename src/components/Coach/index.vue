@@ -39,12 +39,14 @@
         </div>
       </div>
     </form>
-    <Group
-      v-for="group in groups"
-      :key="group.id"
-      :title="group.title"
-      :contents="group.contents"
-    />
+    <transition-group name="group" tag="div">
+      <Group
+        v-for="group in groups"
+        :key="group.id"
+        :title="group.title"
+        :contents="group.contents"
+      />
+    </transition-group>
   </div>
 
 </template>
@@ -115,11 +117,6 @@ export default {
       groupBy: 'learner',
       perfSort: false,
       report: [],
-      // delete this state
-      test_name: 'no one',
-      test_qid: 0,
-      test_val: 0,
-      // / delete this state
     };
   },
   components: {
@@ -170,17 +167,13 @@ export default {
       }));
       return groupz;
     },
-    // delete this function
-    test_update() {
-      console.log('test_update', this.test_name, this.test_qid);
-      const sampleMsg = {
-        username: this.test_name,
-        questionID: parseInt(this.test_qid, 10),
-        lastAttempt: Boolean(this.test_val),
-      };
-      this.updateReport(sampleMsg);
+    test_update(name, qid, val) {
+      this.updateReport({
+        username: name,
+        questionID: qid,
+        lastAttempt: val,
+      });
     },
-    // / delete this function
     updateReport(update) {
       const userMatch = this.report.find(x => x.username === update.username);
       if (!userMatch) {
@@ -227,6 +220,18 @@ export default {
   .table-header {
     font-weight: bold;
     font-size: 16px;
+  }
+
+  .group-enter-active, .group-leave-active {
+    transition: opacity 0.25s;
+  }
+
+  .group-enter, .group-leave-to {
+    opacity: 0;
+  }
+
+  .group-move {
+    transition: transform 0.4s;
   }
 
 </style>
