@@ -31,7 +31,7 @@
         </label>
       </div>
       <label class="pure-checkbox">
-        <input type="checkbox">
+        <input type="checkbox" v-model="perfSort">
         Sort by performance
       </label>
     </form>
@@ -43,6 +43,7 @@
         {{ secondaryLabel }}
       </div>
     </div>
+    <Group title="tttttt" />
   </div>
 
 </template>
@@ -59,6 +60,7 @@
 
 // import questions from '../../assets/questions';
 import sampleDB from './sampleDB';
+import Group from './Group';
 
 export default {
   name: 'Coach',
@@ -66,7 +68,11 @@ export default {
     return {
       data: sampleDB,
       groupBy: 'learner',
+      perfSort: false,
     };
+  },
+  components: {
+    Group,
   },
   mounted() {
     console.log(this.data);
