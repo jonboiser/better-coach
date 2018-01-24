@@ -2,10 +2,11 @@ const express = require('express')
 const app = express()
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
+const bodyParser = require('body-parser')
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/dist/index.html')
-})
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 const database = [];
 
@@ -15,17 +16,38 @@ app.get('/api/coachreport', (req, res) => {
 })
 
 function updateDatabase(data) {
-  console.log(data);
+  let userMatch = database.find(x => x.username === data.username);
+  if (!userMatch) {
+    database.push({
+      username: data.username,
+      history: [],
+    });
+  }
+  userMatch = database.find(x => x.username === data.username);
+  const questionMatch = userMatch.history.find(x => x.questionID === data.questionID);
+  if (!questionMatch) {
+    userMatch.history.push({
+      questionID: data.questionID,
+      attempts: [data.isCorrect],
+    });
+    return [data.isCorrect];
+  } else {
+    questionMatch.attempts.push(data.isCorrect)
+    return [...questionMatch.attempts];
+  }
 }
 
-app.use('/answerquestion', (req) => {
-  const { username, questionID, isCorrect } = req.body.data;
-  const newAttempts = updateDatabase(req.body.data);
+app.post('/api/answerquestion', (req, res) => {
+  const data = req.body;
+  const newAttempts = updateDatabase(data);
   io.emit('update coach', {
-    username: 'username',
-    questionID: 'questionID',
-    attempts: newAttempts,
+    hello: 'world',
   });
+  res.json(newAttempts);
+})
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/dist/index.html')
 })
 
 app.use('/static', express.static(__dirname + '/dist/static'));
