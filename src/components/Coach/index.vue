@@ -43,14 +43,6 @@
         {{ secondaryLabel }}
       </div>
     </div>
-    <!-- Delete this box -->
-    <div style="border: 1px solid blue">
-      <p>name:<input type="text" v-model="test_name"></p>
-      <p>QID<input type="number" v-model="test_qid"></p>
-      <p>value<input type="checkbox" v-model="test_val"></p>
-      <p><button @click="test_update">update</button></p>
-    </div>
-    <!-- / Delete this box -->
     <Group
       v-for="group in groups"
       :key="group.id"
@@ -68,6 +60,7 @@ import axios from 'axios';
 import io from 'socket.io-client';
 import Group from './Group';
 import questions from '../../assets/questions';
+import L from 'lodash';
 
 const MAX = 50;
 
@@ -104,6 +97,19 @@ function questionIdToContentList(id, report) {
     }
   }
   return contents;
+}
+
+/**
+ * contents :: { attempts: boolean[] }
+ */
+function perfSort(contents) {
+  const okWeight = 3;
+  const wrongWeight = -1;
+  const sorted = L.sortBy(contents, (c) => {
+    const [right, wrong] = L.partition(c.attempts);
+    return (right.length * okWeight) - (wrong.length * wrongWeight);
+  });
+  return sorted.reverse();
 }
 
 export default {
@@ -154,10 +160,26 @@ export default {
       }));
     },
     groups() {
-      return this.groupByLearner ? this.learnerGroups : this.resourceGroups;
+      let g;
+      if (this.groupByLearner) {
+        g = this.learnerGroups;
+      } else {
+        g = this.resourceGroups;
+      }
+      if (this.perfSort) {
+        return this.sortByPerformance(g);
+      }
+      return g;
     },
   },
   methods: {
+    sortByPerformance(groups) {
+      const groupz = groups.map(g => ({
+        ...g,
+        contents: perfSort(g.contents),
+      }));
+      return groupz;
+    },
     // delete this function
     test_update() {
       console.log('test_update', this.test_name, this.test_qid);
