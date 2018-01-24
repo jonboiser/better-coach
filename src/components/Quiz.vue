@@ -56,7 +56,7 @@
         </span>
       </div>
     </div>
-    <div v-else>
+    <div v-else class="buttons pure-u-1">
       You're done!
     </div>
   </div>
