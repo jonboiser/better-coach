@@ -16,22 +16,34 @@ app.get('/api/coachreport', (req, res) => {
 })
 
 function updateDatabase(data) {
-  console.log(data);
+  let userMatch = database.find(x => x.username === data.username);
+  if (!userMatch) {
+    database.push({
+      username: data.username,
+      history: [],
+    });
+  }
+  userMatch = database.find(x => x.username === data.username);
+  const questionMatch = userMatch.history.find(x => x.questionID === data.questionID);
+  if (!questionMatch) {
+    userMatch.history.push({
+      questionID: data.questionID,
+      attempts: [data.isCorrect],
+    });
+    return [data.isCorrect];
+  } else {
+    questionMatch.attempts.push(data.isCorrect)
+    return [...questionMatch.attempts];
+  }
 }
 
 app.post('/api/answerquestion', (req, res) => {
-  res.json(req.body)
+  const data = req.body;
+  const newAttempts = updateDatabase(data);
   io.emit('update coach', {
     hello: 'world',
   });
-
-  // const { username, questionID, isCorrect } = req.body.data;
-  // const newAttempts = updateDatabase(req.body.data);
-  // io.emit('update coach', {
-  //   username: 'username',
-  //   questionID: 'questionID',
-  //   attempts: newAttempts,
-  // });
+  res.json(newAttempts);
 })
 
 app.get('/', (req, res) => {
