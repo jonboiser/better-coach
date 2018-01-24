@@ -2,7 +2,7 @@
 
   <div>
     <div>
-      attempts: {{ title }}
+      {{ title }}
     </div>
     <div class="attempts">
       <Attempt

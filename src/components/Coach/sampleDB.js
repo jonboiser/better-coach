@@ -17,10 +17,10 @@ export default [
       },
       {
         questionID: 2,
-        attempts: [false, true, true],
+        attempts: [false, true, false],
       },
       {
-        questionID: 5,
+        questionID: 4,
         attempts: [false, true, true],
       },
     ],

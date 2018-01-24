@@ -2,7 +2,7 @@
 
   <div class="pure-g group">
     <div class="pure-u-1-2">
-      group: {{ title }}
+      {{ title }}
     </div>
     <div class="pure-u-1-2">
       <AttemptLog

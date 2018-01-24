@@ -47,8 +47,10 @@
       {{ JSON.stringify(report, null, 2) }}
     </pre>
     <Group
-      title="hello"
-      :contents="[{id: 1, title: 'T', attempts: [true, false]}]"
+      v-for="group in groups"
+      :key="group.id"
+      :title="group.title"
+      :contents="group.contents"
     />
   </div>
 
@@ -64,11 +66,20 @@
 // }
 
 
-// import questions from '../../assets/questions';
-import axios from 'axios';
-import io from 'socket.io-client';
+import questions from '../../assets/questions';
+// import axios from 'axios';
+// import io from 'socket.io-client';
 import sampleDB from './sampleDB';
 import Group from './Group';
+
+function historyItemToAttemptLog(historyItem) {
+  console.log('>>', historyItem.questionID, questions);
+  return {
+    id: historyItem.questionID,
+    attempts: historyItem.attempts,
+    title: questions[historyItem.questionID].question,
+  };
+}
 
 export default {
   name: 'Coach',
@@ -85,10 +96,10 @@ export default {
   },
   mounted() {
     console.log(this.data);
-    console.log('mounted');
-    const socket = io();
-    socket.on('update coach', update => this.updateReport(update));
-    axios('/api/coachreport').then((res) => { this.report = res.data; });
+    // console.log('mounted');
+    // const socket = io();
+    // socket.on('update coach', update => this.updateReport(update));
+    // axios('/api/coachreport').then((res) => { this.report = res.data; });
     // this.socket = io('http://localhost:4000');
     // this.socket.on('update', msg => console.log(msg));
   },
@@ -101,6 +112,22 @@ export default {
     },
     secondaryLabel() {
       return this.groupByLearner ? 'Resource' : 'Learner';
+    },
+    groups() {
+      const data = this.data;
+      // title
+      // contents { title, attemptlist }
+      const groups = [];
+      if (this.groupByLearner) {
+        for (let i = 0; i < data.length; i += 1) {
+          const thisGroup = {
+            title: data[i].username,
+            contents: data[i].history.map(historyItemToAttemptLog),
+          };
+          groups.push(thisGroup);
+        }
+      }
+      return groups;
     },
   },
   methods: {
