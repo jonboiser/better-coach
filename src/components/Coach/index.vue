@@ -3,9 +3,9 @@
   <div>
     <h1>Real-time coach view</h1>
     <label class="label" for="classname">Class</label>
-    <div class="title" id="classname">First grade</div>
+    <div class="title" id="classname">Hackathon demo</div>
     <label class="label" for="lessonname">Lesson</label>
-    <div class="title" id="lessonname">Phonics</div>
+    <div class="title" id="lessonname">Olympics trivia</div>
     <form class="pure-form">
       <div>
         Group by
