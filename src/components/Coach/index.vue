@@ -67,11 +67,10 @@
 // }
 
 
-import questions from '../../assets/questions';
-// import axios from 'axios';
-// import io from 'socket.io-client';
-import sampleDB from './sampleDB';
+import axios from 'axios';
+import io from 'socket.io-client';
 import Group from './Group';
+import questions from '../../assets/questions';
 
 const MAX = 50;
 
@@ -114,23 +113,21 @@ export default {
   name: 'Coach',
   data() {
     return {
-      data: sampleDB,
       groupBy: 'learner',
       perfSort: false,
-      report: null,
+      report: [],
     };
   },
   components: {
     Group,
   },
   mounted() {
-    console.log(this.data);
-    // console.log('mounted');
-    // const socket = io();
-    // socket.on('update coach', update => this.updateReport(update));
-    // axios('/api/coachreport').then((res) => { this.report = res.data; });
-    // this.socket = io('http://localhost:4000');
-    // this.socket.on('update', msg => console.log(msg));
+    axios('/api/coachreport').then((res) => {
+      this.report = res.data;
+      // don't open the socket until the initial load is done
+      const socket = io();
+      socket.on('update coach', update => this.updateReport(update));
+    });
   },
   computed: {
     groupByLearner() {
@@ -143,7 +140,7 @@ export default {
       return this.groupByLearner ? 'Question' : 'Learner';
     },
     learnerGroups() {
-      return this.data.map(userInfo => ({
+      return this.report.map(userInfo => ({
         title: userInfo.username,
         contents: userInfo.history.map(historyItemToAttemptLog),
       }));
@@ -151,7 +148,7 @@ export default {
     resourceGroups() {
       return questions.map((question, index) => ({
         title: questionTitle(index),
-        contents: questionIdToContentList(index, this.data),
+        contents: questionIdToContentList(index, this.report),
       }));
     },
     groups() {
