@@ -138,12 +138,14 @@ export default {
       return this.report.map(userInfo => ({
         title: userInfo.username,
         contents: userInfo.history.map(historyItemToAttemptLog),
+        id: userInfo.username,
       }));
     },
     resourceGroups() {
       return questions.map((question, index) => ({
         title: questionTitle(index),
         contents: questionIdToContentList(index, this.report),
+        id: index,
       }));
     },
     groups() {
