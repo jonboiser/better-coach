@@ -6,43 +6,39 @@
     <div class="title" id="classname">Hackathon demo</div>
     <label class="label" for="lessonname">Lesson</label>
     <div class="title" id="lessonname">Olympics trivia</div>
-    <form class="pure-form">
-      <div>
-        Group by
-        <label for="learner">
-          <input
-            v-model="groupBy"
-            id="learner"
-            type="radio"
-            name="groupBy"
-            value="learner"
-          >
-          Learner
-        </label>
-        <label for="resource">
-          <input
-            v-model="groupBy"
-            id="resource"
-            type="radio"
-            name="groupBy"
-            value="resource"
-          >
-          Question
-        </label>
+    <form class="pure-form pure-form-stacked">
+      <div class="pure-g table">
+        <div class="pure-u-1-2 table-header">
+          Group by
+          <label for="learner">
+            <input
+              v-model="groupBy"
+              id="learner"
+              type="radio"
+              name="groupBy"
+              value="learner"
+            >
+            learners
+          </label>
+          <label for="resource">
+            <input
+              v-model="groupBy"
+              id="resource"
+              type="radio"
+              name="groupBy"
+              value="resource"
+            >
+            questions
+          </label>
+        </div>
+        <div class="pure-u-1-2 table-header">
+          <label class="pure-checkbox">
+            <input type="checkbox" v-model="perfSort">
+            Where is help needed?
+          </label>
+        </div>
       </div>
-      <label class="pure-checkbox">
-        <input type="checkbox" v-model="perfSort">
-        Sort by performance
-      </label>
     </form>
-    <div class="pure-g table">
-      <div class="pure-u-1-2 table-header">
-        {{ primaryLabel }}
-      </div>
-      <div class="pure-u-1-2 table-header">
-        {{ secondaryLabel }}
-      </div>
-    </div>
     <Group
       v-for="group in groups"
       :key="group.id"
@@ -141,12 +137,6 @@ export default {
     groupByLearner() {
       return this.groupBy === 'learner';
     },
-    primaryLabel() {
-      return this.groupByLearner ? 'Learner' : 'Question';
-    },
-    secondaryLabel() {
-      return this.groupByLearner ? 'Question' : 'Learner';
-    },
     learnerGroups() {
       return this.report.map(userInfo => ({
         title: userInfo.username,
@@ -236,7 +226,7 @@ export default {
 
   .table-header {
     font-weight: bold;
-    font-size: 18px;
+    font-size: 16px;
   }
 
 </style>
