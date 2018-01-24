@@ -1,6 +1,9 @@
 <template>
 
-  <div>
+  <div
+    class="fade"
+    :class="{ highlight: highlight, lastAttempt: lastAttempt }"
+  >
     <div>
       {{ title }}
     </div>
@@ -32,6 +35,32 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      highlight: false,
+      timeout: null,
+    };
+  },
+  watch: {
+    attempts() {
+      if (this.timeout) {
+        clearTimeout(this.timeout);
+      }
+      this.highlight = true;
+      this.timeout = setTimeout(() => {
+        this.highlight = false;
+        this.timeout = null;
+      }, 150);
+    },
+  },
+  computed: {
+    lastAttempt() {
+      if (this.attempts.length) {
+        return this.attempts[this.attempts.length - 1];
+      }
+      return true;
+    },
+  },
   components: {
     Attempt,
   },
@@ -44,6 +73,18 @@ export default {
   .attempts {
     margin-top: 8px;
     margin-bottom: 8px;
+  }
+
+  .fade {
+    transition: background-color 1s;
+  }
+
+  .highlight {
+    background-color: maroon;
+  }
+
+  .highlight.lastAttempt {
+    background-color: green;
   }
 
 </style>
