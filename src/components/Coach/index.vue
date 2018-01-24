@@ -27,7 +27,7 @@
             name="groupBy"
             value="resource"
           >
-          Resource
+          Question
         </label>
       </div>
       <label class="pure-checkbox">
@@ -43,8 +43,9 @@
         {{ secondaryLabel }}
       </div>
     </div>
-    <pre v-if="report">
-      {{ JSON.stringify(report, null, 2) }}
+    <pre>
+      <!-- {{ JSON.stringify(report, null, 2) }} -->
+      <!-- {{ groups }} -->
     </pre>
     <Group
       v-for="group in groups"
@@ -72,13 +73,41 @@ import questions from '../../assets/questions';
 import sampleDB from './sampleDB';
 import Group from './Group';
 
+const MAX = 50;
+
+function questionTitle(id) {
+  const number = id + 1;
+  let name = questions[id].question;
+  if (name.length >= MAX) {
+    name = `${name.substring(0, MAX)} ...`;
+  }
+  return `${number}. ${name}`;
+}
+
 function historyItemToAttemptLog(historyItem) {
-  console.log('>>', historyItem.questionID, questions);
   return {
     id: historyItem.questionID,
     attempts: historyItem.attempts,
-    title: questions[historyItem.questionID].question,
+    title: questionTitle(historyItem.questionID),
   };
+}
+
+function questionIdToContentList(id, report) {
+  const contents = [];
+  for (let i = 0; i < report.length; i += 1) {
+    const userInfo = report[i];
+    for (let j = 0; j < userInfo.history.length; j += 1) {
+      if (userInfo.history[j].questionID === id) {
+        contents.push({
+          id: userInfo.username,
+          attempts: userInfo.history[j].attempts,
+          title: userInfo.username,
+        });
+        break;
+      }
+    }
+  }
+  return contents;
 }
 
 export default {
@@ -108,26 +137,25 @@ export default {
       return this.groupBy === 'learner';
     },
     primaryLabel() {
-      return this.groupByLearner ? 'Learner' : 'Resource';
+      return this.groupByLearner ? 'Learner' : 'Question';
     },
     secondaryLabel() {
-      return this.groupByLearner ? 'Resource' : 'Learner';
+      return this.groupByLearner ? 'Question' : 'Learner';
+    },
+    learnerGroups() {
+      return this.data.map(userInfo => ({
+        title: userInfo.username,
+        contents: userInfo.history.map(historyItemToAttemptLog),
+      }));
+    },
+    resourceGroups() {
+      return questions.map((question, index) => ({
+        title: questionTitle(index),
+        contents: questionIdToContentList(index, this.data),
+      }));
     },
     groups() {
-      const data = this.data;
-      // title
-      // contents { title, attemptlist }
-      const groups = [];
-      if (this.groupByLearner) {
-        for (let i = 0; i < data.length; i += 1) {
-          const thisGroup = {
-            title: data[i].username,
-            contents: data[i].history.map(historyItemToAttemptLog),
-          };
-          groups.push(thisGroup);
-        }
-      }
-      return groups;
+      return this.groupByLearner ? this.learnerGroups : this.resourceGroups;
     },
   },
   methods: {

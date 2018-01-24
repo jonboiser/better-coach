@@ -1,16 +1,19 @@
 <template>
 
   <div class="pure-g group">
-    <div class="pure-u-1-2">
+    <div class="pure-u-1-2 title">
       {{ title }}
     </div>
-    <div class="pure-u-1-2">
+    <div v-if="contents.length" class="pure-u-1-2">
       <AttemptLog
         v-for="content in contents"
         :key="content.id"
         :title="content.title"
         :attempts="content.attempts"
       />
+    </div>
+    <div v-else class="pure-u-1-2 none">
+      no responses
     </div>
   </div>
 
@@ -32,7 +35,7 @@ export default {
       type: Array,
       required: true,
       validator(items) {
-        return items.every(item => item.id && item.title && item.attempts);
+        return items.every(item => item.id !== undefined && item.title && item.attempts);
       },
     },
   },
@@ -49,6 +52,14 @@ export default {
     border-top: 1px solid #CCC;
     padding-top: 8px;
     margin-top: 8px;
+  }
+
+  .title {
+    font-weight: bold;
+  }
+
+  .none {
+    color: gray;
   }
 
 </style>
