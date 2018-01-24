@@ -105,7 +105,8 @@ function perfSortContents(contents) {
   const wrongWeight = -1;
   const sorted = L.sortBy(contents, (c) => {
     const [right, wrong] = L.partition(c.attempts);
-    return (right.length * okWeight) + (wrong.length * wrongWeight);
+    c.score = (right.length * okWeight) + (wrong.length * wrongWeight);
+    return -c.score;
   });
   return sorted.reverse();
 }
@@ -118,7 +119,8 @@ function perfSortGroups(groups) {
     const allAttempts = L.flatMap(g.contents, x => x.attempts || []);
     const [right, wrong] = L.partition(allAttempts);
     const score = (right.length * okWeight) + (wrong.length * wrongWeight);
-  }).reverse();
+    return score;
+  });
   return [...sortedWithAttempts, ...noAttempts];
 }
 
@@ -175,11 +177,13 @@ export default {
   },
   methods: {
     sortByPerformance(groups) {
+      console.log(perfSortContents(groups[0].contents));
       const groupz = groups.map(g => ({
-        ...g,
-        contents: perfSortContents(g.contents),
+        id: g.id,
+        title: g.title,
+        contents: [...perfSortContents(g.contents)],
       }));
-      if (this.groupBy === 'learner') {
+      if (this.groupByLearner) {
         return groupz;
       }
       return perfSortGroups(groupz);
