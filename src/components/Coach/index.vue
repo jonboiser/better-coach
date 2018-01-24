@@ -56,11 +56,11 @@
 
 <script>
 
+import L from 'lodash';
 import axios from 'axios';
 import io from 'socket.io-client';
 import Group from './Group';
 import questions from '../../assets/questions';
-import L from 'lodash';
 
 const MAX = 50;
 

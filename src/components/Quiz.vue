@@ -65,6 +65,7 @@
 
 
 <script>
+import L from 'lodash';
 import io from 'socket.io-client';
 import axios from 'axios';
 import questions from '../assets/questions';
@@ -99,7 +100,9 @@ export default {
     selectedResponseIsCorrect() {
       return Number(this.selectedResponse) === this.currentQuestion.answer;
     },
-    submitAnswer() {
+    submitAnswer: L.throttle(this.submit),
+    submit() {
+      console.log('yoyo');
       axios.post('/api/answerquestion', {
         username: this.username,
         questionID: this.questionIndex,
