@@ -44,6 +44,9 @@
       </div>
     </div>
     <Group title="tttttt" />
+    <pre v-if="report">
+      {{ JSON.stringify(report, null, 2) }}
+    </pre>
   </div>
 
 </template>
@@ -59,6 +62,8 @@
 
 
 // import questions from '../../assets/questions';
+import axios from 'axios';
+import io from 'socket.io-client';
 import sampleDB from './sampleDB';
 import Group from './Group';
 
@@ -69,6 +74,7 @@ export default {
       data: sampleDB,
       groupBy: 'learner',
       perfSort: false,
+      report: null,
     };
   },
   components: {
@@ -76,6 +82,10 @@ export default {
   },
   mounted() {
     console.log(this.data);
+    console.log('mounted');
+    const socket = io();
+    socket.on('update coach', update => this.updateReport(update));
+    axios('/api/coachreport').then((res) => { this.report = res.data; });
     // this.socket = io('http://localhost:4000');
     // this.socket.on('update', msg => console.log(msg));
   },
@@ -91,6 +101,28 @@ export default {
     },
   },
   methods: {
+    updateReport(update) {
+      const userMatch = this.report.find(x => x.username === update.username);
+      if (!userMatch) {
+        this.report.push({
+          username: update.username,
+          history: [{
+            questionID: update.questionID,
+            attempts: [update.lastAttempt],
+          }],
+        });
+      } else {
+        const questionMatch = userMatch.history.find(x => x.questionID === update.questionID);
+        if (!questionMatch) {
+          userMatch.history.push({
+            questionID: update.questionID,
+            attempts: [update.lastAttempt],
+          });
+        } else {
+          questionMatch.attempts.push(update.lastAttempt);
+        }
+      }
+    },
   },
 };
 </script>
