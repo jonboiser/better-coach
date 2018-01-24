@@ -5,7 +5,12 @@
       group: {{ title }}
     </div>
     <div class="pure-u-1-2">
-      <Attempts title="attempts" />
+      <AttemptLog
+        v-for="content in contents"
+        :key="content.id"
+        :title="content.title"
+        :attempts="content.attempts"
+      />
     </div>
   </div>
 
@@ -14,7 +19,7 @@
 
 <script>
 
-import Attempts from './Attempts';
+import AttemptLog from './AttemptLog';
 
 export default {
   name: 'Group',
@@ -23,9 +28,16 @@ export default {
       type: String,
       required: true,
     },
+    contents: {
+      type: Array,
+      required: true,
+      validator(items) {
+        return items.every(item => item.id && item.title && item.attempts);
+      },
+    },
   },
   components: {
-    Attempts,
+    AttemptLog,
   },
 };
 </script>

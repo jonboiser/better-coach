@@ -43,10 +43,13 @@
         {{ secondaryLabel }}
       </div>
     </div>
-    <Group title="tttttt" />
     <pre v-if="report">
       {{ JSON.stringify(report, null, 2) }}
     </pre>
+    <Group
+      title="hello"
+      :contents="[{id: 1, title: 'T', attempts: [true, false]}]"
+    />
   </div>
 
 </template>
