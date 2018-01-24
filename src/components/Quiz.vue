@@ -73,11 +73,6 @@ export default {
       socket: null,
     };
   },
-  mounted() {
-    this.socket = io('http://localhost:4000');
-    // this.socket.on('interval', i => console.log(i));
-    this.socket.on('submit answer echo', answer => console.log(answer));
-  },
   computed: {
     questions() {
       return questions.map(q => ({
@@ -98,11 +93,8 @@ export default {
     },
     submitAnswer() {
       axios.post('/api/answerquestion', {
-
-      });
-      this.socket.emit('submit answer', {
         username: this.username,
-        question: this.questionIndex,
+        questionID: this.questionIndex,
         isCorrect: this.selectedResponseIsCorrect(),
       });
       this.numAttempts = this.numAttempts + 1;

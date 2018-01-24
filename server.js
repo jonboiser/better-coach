@@ -2,10 +2,11 @@ const express = require('express')
 const app = express()
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
+const bodyParser = require('body-parser')
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/dist/index.html')
-})
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 const database = [];
 
@@ -18,14 +19,23 @@ function updateDatabase(data) {
   console.log(data);
 }
 
-app.use('/answerquestion', (req) => {
-  const { username, questionID, isCorrect } = req.body.data;
-  const newAttempts = updateDatabase(req.body.data);
+app.post('/api/answerquestion', (req, res) => {
+  res.json(req.body)
   io.emit('update coach', {
-    username: 'username',
-    questionID: 'questionID',
-    attempts: newAttempts,
+    hello: 'world',
   });
+
+  // const { username, questionID, isCorrect } = req.body.data;
+  // const newAttempts = updateDatabase(req.body.data);
+  // io.emit('update coach', {
+  //   username: 'username',
+  //   questionID: 'questionID',
+  //   attempts: newAttempts,
+  // });
+})
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/dist/index.html')
 })
 
 app.use('/static', express.static(__dirname + '/dist/static'));
