@@ -57,6 +57,7 @@
 
 
 <script>
+import io from 'socket.io-client';
 import questions from '../assets/questions';
 
 export default {
@@ -68,7 +69,13 @@ export default {
       questionIndex: 0,
       numAttempts: 0,
       responseIsCorrect: false,
+      socket: null,
     };
+  },
+  mounted() {
+    this.socket = io('http://localhost:4000');
+    // this.socket.on('interval', i => console.log(i));
+    this.socket.on('submit answer echo', answer => console.log(answer));
   },
   computed: {
     questions() {
@@ -89,6 +96,11 @@ export default {
       return Number(this.selectedResponse) === this.currentQuestion.answer;
     },
     submitAnswer() {
+      this.socket.emit('submit answer', {
+        username: this.username,
+        question: this.questionIndex,
+        isCorrect: this.selectedResponseIsCorrect(),
+      });
       this.numAttempts = this.numAttempts + 1;
       if (this.selectedResponseIsCorrect()) {
         this.responseIsCorrect = true;

@@ -7,13 +7,31 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/dist/index.html')
 })
 
+const database = [];
+
+// return the whole database
+app.get('/coachreport', (req, res) => {
+  res.json(database);
+})
+
+function updateDatabase(data) {
+  console.log(data);
+}
+
+app.use('/answerquestion', (req) => {
+  const { username, questionID, isCorrect } = req.body.data;
+  const newAttempts = updateDatabase(req.body.data);
+  io.emit('update coach', {
+    username: 'username',
+    questionID: 'questionID',
+    attempts: newAttempts,
+  });
+})
+
 app.use('/static', express.static(__dirname + '/dist/static'));
 
 io.on('connection', socket => {
   console.log('a user connected')
-  socket.on('chat message', msg => {
-    io.emit('chat message', msg)
-  })
   socket.on('disconnect', () => {
     console.log('user disconnected')
   })
