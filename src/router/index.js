@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import HelloWorld from '@/components/HelloWorld';
+import Coach from '@/components/Coach';
 import Quiz from '@/components/Quiz';
 import Login from '@/components/Login';
 
@@ -20,9 +20,9 @@ export default new Router({
       component: Quiz,
     },
     {
-      path: '/coachreport',
-      name: 'CoachReport',
-      component: HelloWorld,
+      path: '/coach',
+      name: 'Coach',
+      component: Coach,
     },
   ],
 });
