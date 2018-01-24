@@ -4,8 +4,12 @@
     <div>
       attempts: {{ title }}
     </div>
-    <div>
-      {{ attempts }}
+    <div class="attempts">
+      <Attempt
+        v-for="(attempt, index) in attempts"
+        :key="index"
+        :value="attempt"
+      />
     </div>
   </div>
 
@@ -35,4 +39,11 @@ export default {
 </script>
 
 
-<style scoped></style>
+<style scoped>
+
+  .attempts {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+
+</style>

@@ -1,8 +1,8 @@
 <template>
 
-  <span>
-    <template v-if="value">✓</template>
-    <template v-else>✗</template>
+  <span class="this-attempt">
+    <span class="right" v-if="value">✓</span>
+    <span class="wrong" v-else>✗</span>
   </span>
 
 </template>
@@ -22,4 +22,20 @@ export default {
 </script>
 
 
-<style scoped></style>
+<style scoped>
+
+  .this-attempt {
+    display: inline-block;
+    width: 24px;
+    text-align: center;
+  }
+
+  .right {
+    color: green;
+  }
+
+  .wrong {
+    color: maroon;
+  }
+
+</style>

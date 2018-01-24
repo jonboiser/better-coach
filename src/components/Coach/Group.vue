@@ -1,6 +1,6 @@
 <template>
 
-  <div class="pure-g table">
+  <div class="pure-g group">
     <div class="pure-u-1-2">
       group: {{ title }}
     </div>
@@ -43,4 +43,12 @@ export default {
 </script>
 
 
-<style scoped></style>
+<style scoped>
+
+  .group {
+    border-top: 1px solid #CCC;
+    padding-top: 8px;
+    margin-top: 8px;
+  }
+
+</style>
