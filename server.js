@@ -41,7 +41,9 @@ app.post('/api/answerquestion', (req, res) => {
   const data = req.body;
   const newAttempts = updateDatabase(data);
   io.emit('update coach', {
-    hello: 'world',
+    username: data.username,
+    questionID: data.questionID,
+    lastAttempt: data.isCorrect,
   });
   res.json(newAttempts);
 })
