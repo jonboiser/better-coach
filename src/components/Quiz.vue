@@ -58,6 +58,7 @@
 
 <script>
 import io from 'socket.io-client';
+import axios from 'axios';
 import questions from '../assets/questions';
 
 export default {
@@ -96,6 +97,9 @@ export default {
       return Number(this.selectedResponse) === this.currentQuestion.answer;
     },
     submitAnswer() {
+      axios.post('/api/answerquestion', {
+
+      });
       this.socket.emit('submit answer', {
         username: this.username,
         question: this.questionIndex,

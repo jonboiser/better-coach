@@ -10,7 +10,7 @@ app.get('/', (req, res) => {
 const database = [];
 
 // return the whole database
-app.get('/coachreport', (req, res) => {
+app.get('/api/coachreport', (req, res) => {
   res.json(database);
 })
 
