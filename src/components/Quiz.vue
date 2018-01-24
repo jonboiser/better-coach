@@ -96,11 +96,13 @@ export default {
       return this.$router.currentRoute.params.username;
     },
   },
+  created() {
+    this.submitAnswer = L.throttle(this.submit.bind(this), 500);
+  },
   methods: {
     selectedResponseIsCorrect() {
       return Number(this.selectedResponse) === this.currentQuestion.answer;
     },
-    submitAnswer: L.throttle(this.submit),
     submit() {
       console.log('yoyo');
       axios.post('/api/answerquestion', {
