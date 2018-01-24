@@ -1,14 +1,13 @@
 <template>
 
   <div>
-    <h1>Kolibri Extra-Light</h1>
-    <form @submit.prevent="login">
+    <h1>Kolibri extra-light</h1>
+    <form @submit.prevent="login" class="pure-form">
       <label>
-        Your Name
+        Your name
         <input v-model="username" />
       </label>
-      <br>
-      <button type="submit">
+      <button type="submit" class="pure-button">
         Login
       </button>
       <p v-if="error" class="error">

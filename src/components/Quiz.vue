@@ -2,14 +2,14 @@
 
   <div class="pure-g quiz">
     <div class="pure-u-1">
-      <h1>Hey {{ username }}!!!</h1>
+      <h3>Hey, {{ username }}!</h3>
       <h1>The Quiz</h1>
     </div>
     <div
       v-if="currentQuestion"
       class="exercise pure-u-1"
     >
-      <h3>{{ currentQuestion.question }}</h3>
+      <h3>{{ questionIndex + 1 }}. {{ currentQuestion.question }}</h3>
       <form class="pure-form">
         <template v-for="(option, i) in currentQuestion.options">
           <label
