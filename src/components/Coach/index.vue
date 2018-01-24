@@ -183,9 +183,9 @@ export default {
         title: g.title,
         contents: [...perfSortContents(g.contents)],
       }));
-      if (this.groupByLearner) {
-        return groupz;
-      }
+      // if (this.groupByLearner) {
+      //   return groupz;
+      // }
       return perfSortGroups(groupz);
     },
     test_update(name, qid, val) {
