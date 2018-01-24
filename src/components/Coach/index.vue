@@ -148,7 +148,6 @@ export default {
     },
     learnerGroups() {
       return this.report.map(userInfo => ({
-        id: userInfo.username,
         title: userInfo.username,
         contents: userInfo.history.map(historyItemToAttemptLog),
         id: userInfo.username,
@@ -157,7 +156,6 @@ export default {
     resourceGroups() {
       return questions.map((question, index) => ({
         title: questionTitle(index),
-        id: questionTitle(index),
         contents: questionIdToContentList(index, this.report),
         id: index,
       }));
