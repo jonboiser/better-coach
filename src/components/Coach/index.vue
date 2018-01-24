@@ -15,18 +15,28 @@
 
 
 <script>
-import io from 'socket.io-client';
-import axios from 'axios';
-import questions from '../../assets/questions';
+
+// const sampleMsg =  {
+//   username: 'jb',
+//   questionID: 2,
+//   attempts: [true, false, false],
+// }
+
+
+// import questions from '../../assets/questions';
+import sampleDB from './sampleDB';
 
 export default {
-  name: 'Quiz',
+  name: 'Coach',
   data() {
-    return {};
+    return {
+      data: sampleDB,
+    };
   },
   mounted() {
-    this.socket = io('http://localhost:4000');
-    this.socket.on('submit answer echo', answer => console.log(answer));
+    console.log(this.data);
+    // this.socket = io('http://localhost:4000');
+    // this.socket.on('update', msg => console.log(msg));
   },
   computed: {
   },
@@ -37,7 +47,7 @@ export default {
 
 
 <style scoped>
-  
+
   .title {
     font-size: 24px;
     font-weight: bold;
