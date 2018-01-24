@@ -1,31 +1,38 @@
 <template>
 
-  <div>
-    <h1>Hey {{ username }}!!!</h1>
-    <h1>The Quiz</h1>
-    <div v-if="currentQuestion" class="exercise">
+  <div class="pure-g quiz">
+    <div class="pure-u-1">
+      <h1>Hey {{ username }}!!!</h1>
+      <h1>The Quiz</h1>
+    </div>
+    <div
+      v-if="currentQuestion"
+      class="exercise pure-u-1"
+    >
       <h3>{{ currentQuestion.question }}</h3>
-      <div class="responses">
+      <form class="pure-form">
         <template v-for="(option, i) in currentQuestion.options">
-          <input
-            v-model="selectedResponse"
-            type="radio"
-            name="response"
-            :value="i"
-            :id="`response${i}`"
-            :key="i"
-            :disabled="responseIsCorrect"
-          />
           <label
+            class="label pure-radio"
             :for="`response${i}`"
             :key="`label${i}`"
-          >{{ option }}
+          >
+            <input
+              v-model="selectedResponse"
+              type="radio"
+              name="response"
+              :value="i"
+              :id="`response${i}`"
+              :key="i"
+              :disabled="responseIsCorrect"
+            />
+          {{ option }}
           </label>
-          <br :key="`br${i}`">
         </template>
-      </div>
-      <div class="buttons">
+      </form>
+      <div class="buttons pure-u-1">
         <button
+          class="pure-button"
           v-if="!responseIsCorrect"
           type="submit"
           @click="submitAnswer"
@@ -33,18 +40,19 @@
           Submit
         </button>
         <button
+          class="pure-button"
           v-if="responseIsCorrect"
           @click="goToNextQuestion"
         >
           Next
         </button>
-      </div>
-      <div v-if="numAttempts > 0" class="feedback">
-        <span v-if="responseIsCorrect">
-          Nice!!!
-        </span>
-        <span v-else>
-          Wrong answer! Try again!
+        <span v-if="numAttempts > 0" class="feedback">
+          <span v-if="responseIsCorrect">
+            Nice!!!
+          </span>
+          <span v-else>
+            Wrong answer! Try again!
+          </span>
         </span>
       </div>
     </div>
@@ -115,8 +123,20 @@ export default {
 
 <style scoped>
 
+.quiz {
+  width: 100%;
+}
+
+.buttons {
+  margin-top: 10px;
+}
+
 .exercise {
-  background-color: pink;
   padding: 1rem;
 }
+
+.feedback {
+  font-weight: bold;
+}
+
 </style>
